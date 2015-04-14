@@ -28,7 +28,7 @@ package
 		private var _shot:Boolean = false;
 		private var _endScreen:endArt;
 		private var _endTimer:Timer;
-		private var _difficulty:int = 100;
+		private var _difficulty:int = 250;
 		private var _scoreText:TextField;
 		private var _score:int = 0;
 		private var _playerFire:Boolean = false;
@@ -54,7 +54,7 @@ package
 			_clock = new clockArt();
 			_clockTimer = new Timer(500, 10);
 			_endScreen = new endArt();
-			_endTimer = new Timer(1000, 1);
+			_endTimer = new Timer(3000, 1);
 			_scoreText = new TextField();
 			_enemySpawn = new Timer(3000, 1);
 			_background = new bgArt();
@@ -64,7 +64,9 @@ package
 			_soundChannel = new SoundChannel();
 			
 			
-			_scoreText.text = "Score" + " " + _score;
+			_scoreText.text = "Score:" + " " + _score;
+			_scoreText.scaleX = 2;
+			_scoreText.scaleY = 2;
 			
 			//positioning Gameobjects.
 			_player.x = _stage.stageWidth / 2 - 350;
@@ -76,7 +78,7 @@ package
 			_endScreen.x = _stage.stageWidth / 2;
 			_endScreen.y = _stage.stageHeight / 2;
 			_scoreText.x = 0;
-			_scoreText.y = 50;
+			_scoreText.y = 10;
 			_background.x = _stage.stageWidth / 2;
 			_background.y = _stage.stageHeight / 2;
 			
@@ -199,8 +201,15 @@ package
 					_endTimer.start();
 				}
 			}
+			
+			//if there are no objects in the array it means both the player and the enemy have died and will result in loss.
+			if (_humanoids.length == 0)
+			{
+				addChild(_endScreen);
+				_winScreen.visible = false;
+			}
 		
-			_scoreText.text = "Score" + " " + _score;
+			_scoreText.text = "Score:" + " " + _score;
 		} 
 		
 		public function onKeyDown(e:KeyboardEvent):void
