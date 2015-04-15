@@ -27,7 +27,7 @@ package
 			{
 				for (var j:int = 0; j < _humanoids.length; j++)
 				{	
-					//if they do collide this if statement will be set in motion.
+					//if they do collide this 'if' statement will be set in motion.
 					if (_bullets[i].hitTestPoint(_humanoids[j].x, _humanoids[j].y, false))
 					{
 						_removeHumanoid(_humanoids[j], j);

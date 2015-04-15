@@ -47,7 +47,7 @@ package
 			_bulletFactory = new BulletFactory();
 			_bullets = new Vector.<Bullet>;
 			_player = new Player();
-			_enemy = new Enemy();
+			_enemy = new Enemy();000000
 			_shootTimer = new Timer(_difficulty, 1);
 			_humanoids = new Vector.<Humanoid>;
 			_engine = new Engine(_humanoids, _bullets, removeHumanoid);
@@ -82,6 +82,8 @@ package
 			_background.x = _stage.stageWidth / 2;
 			_background.y = _stage.stageHeight / 2;
 			
+			//_humanoids[0] is always the player.
+			//_humanoids[1] is always the enemy
 			//pushing humanoid objects into vector.
 			_humanoids.push(_player, _enemy);
 			
@@ -100,8 +102,8 @@ package
 			
 			//Setting the frame for movieclip
 			_clock.gotoAndStop(0);
-			_player._art.gotoAndStop(0);
-			_enemy._art.gotoAndStop(0);
+			_player._art.gotoAndStop(1);
+			_enemy._art.gotoAndStop(1);
 			
 			_soundChannel = _gameSound.play();
 		}
@@ -178,7 +180,6 @@ package
 			}
 			
 			
-			
 			/*in the humanoids vector there are always 2 objects. The enemy and the player. This sorts out what should happen if one or another doesnt
 			exist anymore*/
 			if (_humanoids.length == 1)
@@ -224,7 +225,8 @@ package
 				_bullets[_bullets.length - 1].y = _player.y;
 				addChild(_bullets[_bullets.length - 1]);
 				_playerFire = true;
-				_player._art.gotoAndStop(2);
+				_humanoids[0]._art.gotoAndStop(2);
+				_humanoids[1]._art.gotoAndStop(3);
 				_shootSound.play();
 			}
 			
@@ -233,14 +235,16 @@ package
 		//what happens if the shoottimer ends
 		public function shootTimer(e:TimerEvent):void
 		{	
-			if (_humanoids.length > 1)
+			//if the enemy still lives and the timer has ended I generate a bullet so it will shoot.
+			if (_humanoids[1])
 			{
 				//creating a bullet and adding it on the stage
 				_bullets.push(_bulletFactory.createBullet(-1));
 				_bullets[_bullets.length - 1].x = _humanoids[1].x;
 				_bullets[_bullets.length - 1].y = _humanoids[1].y;
 				addChild(_bullets[_bullets.length - 1]);
-				_enemy._art.gotoAndStop(2);
+				_humanoids[1]._art.gotoAndStop(2);
+				_humanoids[0]._art.gotoAndStop(3);
 				_shootSound.play();
 			}
 		}
@@ -261,8 +265,7 @@ package
 					_winScreen = new winArt();
 					addChild(_winScreen);
 					_winScreen.x = _stage.stageWidth / 2;
-					_winScreen.y = _stage.stageHeight / 2 ;
-					
+					_winScreen.y = _stage.stageHeight / 2;
 				}
 			}
 			
@@ -289,7 +292,6 @@ package
 			addChild(enemy);
 			_humanoids.push(enemy);
 			_player._art.gotoAndStop(1);
-			
 		}
 	}
 
