@@ -38,7 +38,10 @@ package
 		private var _deathSound:deathSound;
 		private var _shootSound:shootSound;
 		private var _gameSound:gameSound;
-		private var _soundChannel:SoundChannel; 
+		private var _soundChannel:SoundChannel;
+		private var _worldObj:WorldObj;
+		
+		
 		public function Game(s:Stage) 
 		{	
 			//instantiating variables.
@@ -62,7 +65,7 @@ package
 			_shootSound = new shootSound();
 			_gameSound = new gameSound();
 			_soundChannel = new SoundChannel();
-			
+			_worldObj = new WorldObj(s);
 			
 			_scoreText.text = "Score:" + " " + _score;
 			_scoreText.scaleX = 2;
@@ -83,7 +86,7 @@ package
 			_background.y = _stage.stageHeight / 2;
 			
 			//_humanoids[0] is always the player.
-			//_humanoids[1] is always the enemy
+			//_humanoids[1] is always the enemy.
 			//pushing humanoid objects into vector.
 			_humanoids.push(_player, _enemy);
 			
@@ -95,11 +98,13 @@ package
 			
 			//adding objects to the game.
 			addChild(_background);
+			addChild(_worldObj);
 			addChild(_player);
 			addChild(_enemy);
 			addChild(_clock);
 			addChild(_scoreText);
 			
+		
 			//Setting the frame for movieclip
 			_clock.gotoAndStop(0);
 			_player._art.gotoAndStop(1);
@@ -108,6 +113,7 @@ package
 			_soundChannel = _gameSound.play();
 		}
 		
+		//function for what happens when the old enemy died and a new one spawns
 		private function enemyCooldown(e:TimerEvent):void 
 		{
 			_clock.gotoAndStop(0)
@@ -145,6 +151,10 @@ package
 		
 		public function update():void
 		{	
+			if (_worldObj)
+			{
+				_worldObj.Update();
+			}
 			
 			//looping trough the bullets array and updating them
 			if (_bullets.length != 0)
@@ -236,7 +246,7 @@ package
 		public function shootTimer(e:TimerEvent):void
 		{	
 			//if the enemy still lives and the timer has ended I generate a bullet so it will shoot.
-			if (_humanoids[1])
+			if (_humanoids.length > 1)
 			{
 				//creating a bullet and adding it on the stage
 				_bullets.push(_bulletFactory.createBullet(-1));
@@ -269,7 +279,7 @@ package
 				}
 			}
 			
-			//if the humanoid left in the array is the player that gets removed the game will end.
+			//If the player gets removed the game will end.
 			if (h is Player)
 			{
 				addChild(_endScreen);
@@ -284,7 +294,7 @@ package
 				removeChild(_winScreen);
 				_winScreen = null;
 			}
-			//i create the enemy and push it into the humanoids array so it always consists of 2 objects.
+			//I create the enemy and push it into the humanoids array so it always consists of 2 objects.
 			var enemy:Enemy = new Enemy();
 			enemy._art.gotoAndStop(1);
 			enemy.x = _enemy.x;
